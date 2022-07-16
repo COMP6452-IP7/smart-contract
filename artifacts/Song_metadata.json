@@ -1,0 +1,51 @@
+{
+	"compiler": {
+		"version": "0.8.6+commit.11564f7e"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts\\Song.sol": "Song"
+		},
+		"evmVersion": "berlin",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts\\Song.sol": {
+			"keccak256": "0xb19072284d96eca6256cd9086b1c2d799c64db1e2f0cb59af8b7d2044e0709a6",
+			"license": "UNLICENSE",
+			"urls": [
+				"bzz-raw://5a34719793ce207f15128a2213dcab5431dfed6fddbc7dea7af687bd8e2ba161",
+				"dweb:/ipfs/QmWh5QSaEjNvbUhq3LYQABQbMdsP9kybab2MFZ4gDLedh1"
+			]
+		}
+	},
+	"version": 1
+}
