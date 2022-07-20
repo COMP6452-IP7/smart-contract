@@ -1,6 +1,5 @@
 
 import firebase_admin
-import self as self
 
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -10,10 +9,9 @@ from firebase_admin import firestore
 import Consts as CONST
 #from TestClient import main
 
-
 def initialize_firestore():
     # Use a firestore service account
-    cred = credentials.Certificate("./firebase/ipmanagementmusic.json")
+    cred = credentials.Certificate("smart-contract/firebase/ipmanagementmusic.json")
     firebase_admin.initialize_app(cred)
     db = firestore.client()
     print("Accessing firestore")

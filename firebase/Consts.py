@@ -1,6 +1,4 @@
 # Other files
-#FIRESTORE_ACCOUNT_KEY = "./firestore/ipmanagementmusic.json"
-
 
 # Server variables
 APP_CERTIFICATE = "c5b47c81a7d1405aa4b9f310ff609078"
