@@ -1,33 +1,49 @@
 
 import firebase_admin
-
 from firebase_admin import credentials
 from firebase_admin import firestore
+
+
 #from google.cloud.firestore_v1 import Increment
 
 #from UserProfile import UserProfile
 import Consts as CONST
 #from TestClient import main
 
-def initialize_firestore():
-    # Use a firestore service account
-    cred = credentials.Certificate("smart-contract/firebase/ipmanagementmusic.json")
-    firebase_admin.initialize_app(cred)
-    db = firestore.client()
-    print("Accessing firestore")
+##def initialize_firestore():
+# Use a firestore service account
+cred = credentials.Certificate("./firebase/ipmanagementmusic.json")
+firebase_admin.initialize_app(cred)
+db = firestore.client()
+print("Accessing Firestore")
 
-    #client send hashed song file with mp3 file to here
+def add_song(song_name, artist, song_file):
+
+    if song_name == " " or artist == " " or song_file == " ":
+        print("Incorrect input!")
+        exit
+
     data = {
-        u'name': u'brisbane',
-        u'state': u'CA',
-        u'country': u'USA'
+        u'Song Name': song_name,
+        u'Artist': artist,
+        u'Song File': song_file
     }
-    db.collection(u'cities').document(u'syd').set(data)
 
+    db.collection(u'Songs').document(song_name[0]).set(data)
 
-def set_song(self,hash, songId):
+def retrieve_song(song_name, artist):
+
+    doc_ref = db.collection(u'Songs').document(song_name[0])
+    doc = doc_ref.get()
+
+    if doc.exists:
+        print('Song Information:', doc.to_dict())
+    else:
+        print('Song does not exist!')
+        exit
+
     # Server to retrieve user info from firestore
-        self.db.collection(CONST.SONGS).document().set()
+    # db.collection(CONST.SONGS).document().set()
     # seems to sometimes not load in time so user is none
     # Check document exists
     #if user_doc.exists:
@@ -54,10 +70,12 @@ def set_song(self,hash, songId):
                             #CONST.IS_FRIEND: True},
             #merge=True)
 
+def update_song(songName, songFile):
+    pass
 
-initialize_firestore()
-#set_song("aaaaa", "001")
-
+#initialize_firestore()
+#add_song(" ", "test", "File")
+#retrieve_song("Stay", "Rihanna")
         
    
 
