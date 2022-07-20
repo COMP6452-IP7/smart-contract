@@ -13,7 +13,7 @@ import Consts as CONST
 
 def initialize_firestore():
     # Use a firestore service account
-    cred = credentials.Certificate(CONST.FIRESTORE_ACCOUNT_KEY)
+    cred = credentials.Certificate("./firebase/ipmanagementmusic.json")
     firebase_admin.initialize_app(cred)
     db = firestore.client()
     print("Accessing firestore")

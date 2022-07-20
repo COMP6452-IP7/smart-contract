@@ -1,5 +1,5 @@
 # Other files
-FIRESTORE_ACCOUNT_KEY = "./firestore/ipmanagementmusic.json"
+#FIRESTORE_ACCOUNT_KEY = "./firestore/ipmanagementmusic.json"
 
 
 # Server variables
