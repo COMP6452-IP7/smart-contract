@@ -2,7 +2,8 @@
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
-
+from firebase_admin import storage
+from mp3hash import mp3hash
 
 #from google.cloud.firestore_v1 import Increment
 
@@ -13,27 +14,42 @@ import Consts as CONST
 ##def initialize_firestore():
 # Use a firestore service account
 cred = credentials.Certificate("./firebase/ipmanagementmusic.json")
-firebase_admin.initialize_app(cred)
+firebase_admin.initialize_app(cred, {'storageBucket': 'ipmanagement-music.appspot.com'})
 db = firestore.client()
 print("Accessing Firestore")
 
-def add_song(song_name, artist, song_file):
+
+def add_song(artist, song_name, song_file):
 
     if song_name == " " or artist == " " or song_file == " ":
         print("Incorrect input!")
         exit
 
+    song_hash = mp3hash(song_file)
+
+    song_name = song_name.title()
+    artist = artist.title()
+
+    filename = song_file
+    bucket = storage.bucket()
+    blob = bucket.blob(filename)
+    blob.upload_from_filename(filename)
+
     data = {
         u'Song Name': song_name,
         u'Artist': artist,
-        u'Song File': song_file
+        u'Song File': blob.public_url,
+        u'Song Hash': song_hash
     }
 
-    db.collection(u'Songs').document(song_name[0]).set(data)
+    db.collection(artist).document(song_name).set(data)
 
-def retrieve_song(song_name, artist):
+def retrieve_song(artist, song_name):
 
-    doc_ref = db.collection(u'Songs').document(song_name[0])
+    song_name = song_name.title()
+    artist = artist.title()
+
+    doc_ref = db.collection(artist).document(song_name)
     doc = doc_ref.get()
 
     if doc.exists:
@@ -74,7 +90,7 @@ def update_song(songName, songFile):
     pass
 
 #initialize_firestore()
-#add_song(" ", "test", "File")
+add_song("Adele", "rolling in the deep", "./firebase/adele.mp3")
 #retrieve_song("Stay", "Rihanna")
         
    
