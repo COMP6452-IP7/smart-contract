@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: UNLICENSE
 pragma solidity >=0.4.25 <0.9.0;
 
+
+import "./Oracle.sol";
+
 contract Song {
     enum LicenseType {
         NoLicense, 
@@ -11,30 +14,30 @@ contract Song {
 
     struct SongInfo {
         string title;
-        mapping(address => bool) artists;
-        bytes32 fileHash;
+        address artistAddress;
+        string fileHash;
         uint256 expirationDate;
         LicenseType license;
-        bool artistAlive;
+        string artistName; 
     }
 
+    bool public artistAlive = true; 
     SongInfo song; 
     mapping(address => bool) userLicensing;
 
     constructor(string memory title,
-        bytes32 fileHash,
+        string memory fileHash,
         uint256 expirationDate,
         Song.LicenseType license,
-        address[] memory artists) 
+        string memory artistName,
+        address artistAddress) 
     {
         song.title = title;
         song.fileHash = fileHash;
         song.expirationDate = expirationDate;
         song.license = license;
-        song.artistAlive = true;
-        for (uint256 i = 0; i < artists.length; i++) {
-            song.artists[artists[i]] = true;
-        }
+        song.artistName = artistName; 
+        song.artistAddress = artistAddress;
     }
 
     function modifySongLicense(
@@ -61,9 +64,18 @@ contract Song {
         }
     }
 
+    function isAlive(OracleContract _oracle) public {
+        _oracle.requestPhase(song.artistName);
+    }
+
+    function stillAlive(OracleContract _oracle) public view returns (bool)
+    {
+        return _oracle.printResponseAlive();
+    }
+
 
     modifier onlyArtist() {
-        require(song.artists[msg.sender]);
+        require(song.artistAddress == msg.sender);
         _;
     }
 
@@ -72,5 +84,4 @@ contract Song {
         require(song.license == LicenseType.MasterLicense || song.license == LicenseType.SyncLicense);
         _;
     }
-
 }
