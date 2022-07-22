@@ -57,5 +57,5 @@ def update_song(songName, songFile):
     pass
 
 #initialize_firestore()
-add_song("Adele", "someone like you", "./firebase/adele.mp3")
+add_song("Adele", "someone like you", "adele.mp3")
 #retrieve_song("Rihanna", "Stay")
