@@ -110,6 +110,27 @@ const axios = require("axios").default;
                 console.log("IS ALIVE: ")
                 console.log(response.data[0].is_alive)
                 return response.data[0].is_alive;
+
+                // Code to change to check for death date - not tested
+                //console.log("Dead or nah?: ")
+                //console.log(response.data[0].death)
+                //if (response.data[0].death != '') {
+                    //var death = new Date(response.data[0].death);
+                    //var today = new Date();
+                    //add 70 days to death date
+                    //var dateAdded = death.setDate(death.getDate() + 70);
+                    //find the difference
+                    //var diff = Math.abs(today-death);
+                    //if (diff > 0) {
+                        //result = true; // means they've been dead longer than 70 years
+                    //} else {
+                        //result = false;
+                    //}
+                //} else {
+                    //result = false;
+                //}
+                //return result??; 
+                 
             })
             .catch(function (error: any) {
                 console.log(error);
