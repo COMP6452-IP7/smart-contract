@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: UNLICENSE
 pragma solidity >=0.4.25 <0.9.0;
 
-import "./Song.sol";
-
 contract OracleContract{
 
     bool public isAlive = true; 
@@ -23,11 +21,6 @@ contract OracleContract{
     }
 
     function printResponseAlive() public view returns (bool)
-    {
-        return isAlive; 
-    }
-
-    function isAliveorNot() view public returns (bool)
     {
         return isAlive; 
     }

@@ -61,8 +61,6 @@ const axios = require("axios").default;
     }
     let compiled = compileSols(["Oracle"]);
     // console.log(compiled.contracts.example.CoatIndicator);
-
-
     //DEPLOY SC 
 
     let contract_instance: Contract; //Contract instance 

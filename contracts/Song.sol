@@ -21,7 +21,6 @@ contract Song {
         string artistName; 
     }
 
-    bool public artistAlive = true; 
     SongInfo song; 
     mapping(address => bool) userLicensing;
 
