@@ -65,9 +65,9 @@ const axios = require("axios").default;
 
     let contract_instance: Contract; //Contract instance 
     let gasPrice: string;
-    let contract = new web3.eth.Contract(compiled.contracts["Oracle"]["OracleContract"].abi, //Created using name of file 
+    let contract = new web3.eth.Contract(compiled.contracts["Oracle"]["Oracle"].abi, //Created using name of file 
         undefined, {
-            data: "0x" + compiled.contracts["Oracle"]["OracleContract"].evm.bytecode.object
+            data: "0x" + compiled.contracts["Oracle"]["Oracle"].evm.bytecode.object
         });
     await web3.eth.getGasPrice().then((averageGasPrice) => {
         gasPrice = averageGasPrice; //Get average gas price, as when we deploy SC need gas price 

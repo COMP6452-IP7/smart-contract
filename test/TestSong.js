@@ -55,10 +55,10 @@ contract('Song', function (accounts) {
     expect(parseInt(account2Lisence)).to.equal(Song.LicenseType.MasterLicense);
   });
 
-  //it('Check artist alive', async function () {
-  //  const artistAlive = await exampleSong.stillAlive.call(oracle);
-  //  expect(artistAlive).to.equal(true);
-  //});
+  it('Check artist alive', async function () {
+    const artistAlive = await exampleSong.stillAlive.call(oracle);
+    expect(artistAlive).to.equal(true);
+  });
 
 });
 
