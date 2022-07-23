@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: UNLICENSE
 pragma solidity >=0.4.25 <0.9.0;
 
-
 import "./Oracle.sol";
 
 contract Song {
@@ -39,23 +38,25 @@ contract Song {
         song.artistAddress = artistAddress;
     }
 
-    function modifySongLicense(
-        Song.LicenseType license
-    ) public onlyArtist {
-        song.license = license;
+    function getSongInformation() public view returns (SongInfo memory)
+    {
+        return song;
     }
 
+    function modifySongLicense(Song.LicenseType _license) public onlyArtist {
+        song.license = _license;
+    }
 
     function giveUserLicensing(address userContractAddress) public onlyArtist checkLicense
     {
-        userLicensing[userContractAddress] = true; 
+        userLicensing[userContractAddress] = true;
     }
 
     function getUserLicensing(address userContractAddress) public view returns (LicenseType)
     {
         if (userLicensing[userContractAddress])
         {
-            return song.license; 
+            return song.license;
         }
         else
         {
@@ -63,11 +64,11 @@ contract Song {
         }
     }
 
-    function isAlive(OracleContract _oracle) public {
+    function isAlive(Oracle _oracle) public {
         _oracle.requestPhase(song.artistName);
     }
 
-    function stillAlive(OracleContract _oracle) public view returns (bool)
+    function stillAlive(Oracle _oracle) public view returns (bool)
     {
         return _oracle.printResponseAlive();
     }

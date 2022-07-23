@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSE
 pragma solidity >=0.4.25 <0.9.0;
 
-contract OracleContract{
+contract Oracle {
 
     bool public isAlive = true; 
 
