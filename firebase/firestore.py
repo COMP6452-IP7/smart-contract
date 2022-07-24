@@ -4,7 +4,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 from firebase_admin import storage
 from mp3hash import mp3hash
-import Consts as CONST
+import os, sys
 
 # Use a firestore service account
 cred = credentials.Certificate("./firebase/ipmanagementmusic.json")
@@ -23,10 +23,10 @@ def add_song(artist, song_name, song_file):
     song_name = song_name.title()
     artist = artist.title()
 
-    filename = song_file
+    filename = os.path.basename(song_file)
     bucket = storage.bucket()
     blob = bucket.blob(filename)
-    blob.upload_from_filename(filename)
+    blob.upload_from_filename(song_file)
 
     data = {
         u'Song Name': song_name,
@@ -56,6 +56,18 @@ def retrieve_song(artist, song_name):
 def update_song(songName, songFile):
     pass
 
-#initialize_firestore()
-add_song("Adele", "someone like you", "adele.mp3")
-#retrieve_song("Rihanna", "Stay")
+
+# Usage:
+# python3 firestore.py add "Artist Name" "Song Name" "Song File"
+# python3 firestore.py retrieve "Artist Name" "Song Name"
+
+if (len(sys.argv) < 2):
+    print("Too few arguments!")
+    exit
+if (sys.argv[1] == 'add' and len(sys.argv) == 5):
+    add_song(sys.argv[2], sys.argv[3], sys.argv[4])
+elif (sys.argv[1] == 'retrieve' and len(sys.argv) == 4):
+    retrieve_song(sys.argv[2], sys.argv[3])
+else:
+    print("Wrong arguments!")
+    exit
