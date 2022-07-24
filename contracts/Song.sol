@@ -47,32 +47,30 @@ contract Song {
         song.license = _license;
     }
 
-    function giveUserLicensing(address userContractAddress) public onlyArtist checkLicense
+    function giveUserLicensing(address userAddress) public onlyArtist checkLicense
     {
-        userLicensing[userContractAddress] = true;
+        userLicensing[userAddress] = true;
     }
 
-    function getUserLicensing(address userContractAddress) public view returns (LicenseType)
+    function getUserLicensing(address userAddress) public view returns (LicenseType)
     {
-        if (userLicensing[userContractAddress])
-        {
+        if (userLicensing[userAddress]) {
             return song.license;
-        }
-        else
-        {
+        } else {
             return LicenseType.NoLicense;
         }
     }
 
-    function isAlive(Oracle _oracle) public {
-        _oracle.requestPhase(song.artistName);
-    }
-
-    function stillAlive(Oracle _oracle) public view returns (bool)
+    function updateIsAlive(Oracle _oracle) public returns (bool)
     {
+        _oracle.requestPhase(song.artistName);
         return _oracle.printResponseAlive();
     }
 
+    function checkAlive(Oracle _oracle) public view returns (bool)
+    {
+        return _oracle.printResponseAlive();
+    }
 
     modifier onlyArtist() {
         require(song.artistAddress == msg.sender);

@@ -3,7 +3,7 @@ pragma solidity >=0.4.25 <0.9.0;
 
 contract Oracle {
 
-    bool public isAlive = true; 
+    bool private isAlive = true;
 
     event artistRequest(string name);
 
@@ -17,7 +17,7 @@ contract Oracle {
     }
 
     function responseAlive(bool alive) public {
-        isAlive = alive; 
+        isAlive = alive;
     }
 
     function printResponseAlive() public view returns (bool)
