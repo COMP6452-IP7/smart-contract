@@ -52,10 +52,14 @@ contract Song {
         userLicensing[userAddress] = true;
     }
 
-    function getUserLicensing(address userAddress) public view returns (LicenseType)
+    function getUserLicensing(address userAddress, Oracle _oracle) public view returns (LicenseType)
     {
         if (userLicensing[userAddress]) {
-            return song.license;
+            if (checkAlive(_oracle)) {
+                return song.license;
+            } else {
+                return LicenseType.Unlicensed;
+            }
         } else {
             return LicenseType.NoLicense;
         }
