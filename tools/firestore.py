@@ -12,7 +12,7 @@ db = firestore.client()
 print("Accessing Firestore")
 
 
-def add_song(artist, song_name, song_file, song_hash):
+def add_song(artist, song_name, song_file, song_hash, file_token):
 
     if song_name == " " or artist == " " or song_file == " ":
         print("Incorrect input!")
@@ -30,20 +30,21 @@ def add_song(artist, song_name, song_file, song_hash):
         u'Song Name': song_name,
         u'Artist': artist,
         u'Song File': blob.public_url,
-        u'Song Hash': song_hash
+        u'Song Hash': song_hash,
+        u'Song File Token': file_token,
     }
 
-    db.collection(artist).document(song_name).set(data)
+    db.collection(artist).document(file_token).set(data)
 
     print("Added song! URL is " + blob.public_url)
 
 
-def retrieve_song(artist, song_name):
+def retrieve_song(artist, file_token):
 
-    song_name = song_name.title()
     artist = artist.title()
 
-    doc_ref = db.collection(artist).document(song_name)
+    doc_ref = db.collection(artist).document(file_token)
+
     doc = doc_ref.get()
 
     if doc.exists:
@@ -58,14 +59,14 @@ def update_song(songName, songFile):
 
 
 # Usage:
-# python3 firestore.py add "Artist Name" "Song Name" "Song File" "Song Hash"
-# python3 firestore.py retrieve "Artist Name" "Song Name"
+# python3 firestore.py add "Artist Name" "Song Name" "Song File" "Song Hash" "Song File Token"
+# python3 firestore.py retrieve "Artist Name" "Song File Token"
 
 if (len(sys.argv) < 2):
     print("Too few arguments!")
     exit
-if (sys.argv[1] == 'add' and len(sys.argv) == 6):
-    add_song(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+if (sys.argv[1] == 'add' and len(sys.argv) == 7):
+    add_song(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
 elif (sys.argv[1] == 'retrieve' and len(sys.argv) == 4):
     retrieve_song(sys.argv[2], sys.argv[3])
 else:

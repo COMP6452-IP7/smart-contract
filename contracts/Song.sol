@@ -5,7 +5,7 @@ import "./Oracle.sol";
 
 contract Song {
     enum LicenseType {
-        NoLicense, 
+        NoLicense,
         Unlicensed,
         MasterLicense,
         SyncLicense
@@ -17,45 +17,75 @@ contract Song {
         string fileHash;
         uint256 expirationDate;
         LicenseType license;
-        string artistName; 
+        string artistName;
+        bool artistAlive;
+        string fileToken;
     }
 
-    SongInfo song; 
+    struct SongInfoPublic {
+        string title;
+        address artistAddress;
+        string fileHash;
+        uint256 expirationDate;
+        LicenseType license;
+        string artistName;
+    }
+
+    SongInfo song;
     mapping(address => bool) userLicensing;
 
-    constructor(string memory title,
+    constructor(
+        string memory title,
         string memory fileHash,
         uint256 expirationDate,
         Song.LicenseType license,
         string memory artistName,
-        address artistAddress) 
-    {
+        address artistAddress,
+        string memory fileToken
+    ) {
         song.title = title;
         song.fileHash = fileHash;
         song.expirationDate = expirationDate;
         song.license = license;
-        song.artistName = artistName; 
+        song.artistName = artistName;
         song.artistAddress = artistAddress;
+        song.fileToken = fileToken;
     }
 
-    function getSongInformation() public view returns (SongInfo memory)
-    {
-        return song;
+    function getSongInformation() public view returns (SongInfoPublic memory) {
+        return SongInfoPublic(
+            song.title,
+            song.artistAddress,
+            song.fileHash,
+            song.expirationDate,
+            song.license,
+            song.artistName
+        );
+    }
+
+    function getSongFileToken() public view onlyLicensed returns (string memory) {
+        return song.fileToken;
     }
 
     function modifySongLicense(Song.LicenseType _license) public onlyArtist {
         song.license = _license;
     }
 
-    function giveUserLicensing(address userAddress) public onlyArtist checkLicense
+    function giveUserLicensing(address userAddress)
+        public
+        onlyArtist
+        checkLicense
     {
         userLicensing[userAddress] = true;
     }
 
-    function getUserLicensing(address userAddress, Oracle _oracle) public view returns (LicenseType)
+    function getUserLicensing(address userAddress)
+        public
+        view
+        returns (LicenseType)
     {
         if (userLicensing[userAddress]) {
-            if (checkAlive(_oracle)) {
+            if (checkAlive()) {
                 return song.license;
             } else {
                 return LicenseType.Unlicensed;
@@ -65,15 +95,14 @@ contract Song {
         }
     }
 
-    function updateIsAlive(Oracle _oracle) public returns (bool)
-    {
+    function updateIsAlive(Oracle _oracle) public returns (bool) {
         _oracle.requestPhase(song.artistName);
+        song.artistAlive = _oracle.printResponseAlive();
         return _oracle.printResponseAlive();
     }
 
-    function checkAlive(Oracle _oracle) public view returns (bool)
-    {
-        return _oracle.printResponseAlive();
+    function checkAlive() public view returns (bool) {
+        return song.artistAlive;
     }
 
     modifier onlyArtist() {
@@ -81,9 +110,28 @@ contract Song {
         _;
     }
 
-    modifier checkLicense()
-    {
-        require(song.license == LicenseType.MasterLicense || song.license == LicenseType.SyncLicense);
+    modifier onlyLicensed() {
+        bool licensed = false;
+        if (song.license == LicenseType.Unlicensed) {
+            licensed = true;
+        } else {
+            if (!song.artistAlive) {
+                licensed = true;
+            } else {
+                if (userLicensing[msg.sender] || msg.sender == song.artistAddress) {
+                    licensed = true;
+                }
+            }
+        }
+        require(licensed);
+        _;
+    }
+
+    modifier checkLicense() {
+        require(
+            song.license == LicenseType.MasterLicense ||
+                song.license == LicenseType.SyncLicense
+        );
         _;
     }
 }
