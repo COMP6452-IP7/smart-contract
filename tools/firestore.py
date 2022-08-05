@@ -11,7 +11,7 @@ firebase_admin.initialize_app(cred, {'storageBucket': 'ipmanagement-music.appspo
 db = firestore.client()
 print("Accessing Firestore")
 
-
+# add song to firestore, generating a public url for the song
 def add_song(artist, song_name, song_file, song_hash, file_token):
 
     if song_name == " " or artist == " " or song_file == " ":
@@ -38,7 +38,7 @@ def add_song(artist, song_name, song_file, song_hash, file_token):
 
     print("Added song! URL is " + blob.public_url)
 
-
+# retrieve song from firestore
 def retrieve_song(artist, file_token):
 
     artist = artist.title()

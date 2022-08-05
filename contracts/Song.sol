@@ -11,6 +11,7 @@ contract Song {
         SyncLicense
     }
 
+    //song info;
     struct SongInfo {
         string title;
         address artistAddress;
@@ -21,7 +22,8 @@ contract Song {
         bool artistAlive;
         string fileToken;
     }
-
+    
+    // song info shown on public;
     struct SongInfoPublic {
         string title;
         address artistAddress;
@@ -34,6 +36,7 @@ contract Song {
     SongInfo song;
     mapping(address => bool) userLicensing;
 
+    //song constructor;
     constructor(
         string memory title,
         string memory fileHash,
@@ -52,25 +55,40 @@ contract Song {
         song.fileToken = fileToken;
     }
 
+    //users can get song information from blockchain;
+    //return song info;
     function getSongInformation() public view returns (SongInfoPublic memory) {
-        return SongInfoPublic(
-            song.title,
-            song.artistAddress,
-            song.fileHash,
-            song.expirationDate,
-            song.license,
-            song.artistName
-        );
+        return
+            SongInfoPublic(
+                song.title,
+                song.artistAddress,
+                song.fileHash,
+                song.expirationDate,
+                song.license,
+                song.artistName
+            );
     }
 
-    function getSongFileToken() public view onlyLicensed returns (string memory) {
+    //user can get song file token to download the song;
+    //Require check download permission of the song;
+    //Return song file token;
+    function getSongFileToken()
+        public
+        view
+        checkDownloadPermisson
+        returns (string memory)
+    {
         return song.fileToken;
     }
 
+    //Only artists can modify the license of a song;
     function modifySongLicense(Song.LicenseType _license) public onlyArtist {
         song.license = _license;
     }
 
+    //Artists can give license to users;
+    //Require only artists can authorise license to users;
+    //Require license type is MasterLicense or SyncLicense;
     function giveUserLicensing(address userAddress)
         public
         onlyArtist
@@ -79,6 +97,9 @@ contract Song {
         userLicensing[userAddress] = true;
     }
 
+    //Platforms/users can check if a user is able to use a specific song if:
+    //the artist is alive and the user has been authorised the license of the song by the artist;
+    //return song's licence type;
     function getUserLicensing(address userAddress)
         public
         view
@@ -95,38 +116,49 @@ contract Song {
         }
     }
 
+    //Oracle check if an artist is alive;
+    //return bool;
     function updateIsAlive(Oracle _oracle) public returns (bool) {
         _oracle.requestPhase(song.artistName);
         song.artistAlive = _oracle.printResponseAlive();
         return _oracle.printResponseAlive();
     }
 
+    //View ArtistAlive;
     function checkAlive() public view returns (bool) {
         return song.artistAlive;
     }
 
+    //Artist's address is msg.sender;
     modifier onlyArtist() {
         require(song.artistAddress == msg.sender);
         _;
     }
-
-    modifier onlyLicensed() {
-        bool licensed = false;
+    //A specific song can be downloaded by any user if :
+    //the License Type is Unlicensed;
+    //the artist has passed away;
+    //the user has been authorised license or;
+    //the song can be downloaded by the artist self;
+    modifier checkDownloadPermisson() {
+        bool download = false;
         if (song.license == LicenseType.Unlicensed) {
-            licensed = true;
+            download = true;
         } else {
             if (!song.artistAlive) {
-                licensed = true;
+                download = true;
             } else {
-                if (userLicensing[msg.sender] || msg.sender == song.artistAddress) {
-                    licensed = true;
+                if (
+                    userLicensing[msg.sender] ||
+                    msg.sender == song.artistAddress
+                ) {
+                    download = true;
                 }
             }
         }
-        require(licensed);
+        require(download);
         _;
     }
-
+    //check a song's license is either MasterLicense or SyncLicense;
     modifier checkLicense() {
         require(
             song.license == LicenseType.MasterLicense ||
