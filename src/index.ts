@@ -89,7 +89,7 @@ const axios = require("axios").default;
     console.log(contract_instance!.options.address); //Deployed contract address 
     fs.writeFile('./oracle_address.txt', contract_instance!.options.address, function () {});
 
-    //GRAB WEATHER API INFORMATION (COMBINES ABOVE BUT WITH GOWEATHER API) 
+    // Obtain celebrity information using celebrity API
     
     contract_instance!.events["artistRequest(string)"]()
         .on("connected", function (subscriptionId: any) {
@@ -127,7 +127,7 @@ const axios = require("axios").default;
         .on("error", function (error: any, receipt: any) {
             console.log(error);
             console.log(receipt);
-            console.log("error listening on event temperatureRequest");
+            console.log("error listening on event artistRequest");
         });
 
 
