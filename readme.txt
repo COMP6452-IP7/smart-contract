@@ -1,7 +1,11 @@
+NOTE
+
+We don't have a smart_contract_addresses.txt because we deployed our smart contracts on a local Ganache network. Also each instance of a song is a separate smart contract.
+
 SETTING UP
 
 1. Launch Ganache and create a new workspace. Setup the server by setting the port number to 7545.
-2. Run the oracle script, index.ts, and obtain the oracle addressing using the command: npx tsc && node build/index.ts
+2. Run the oracle script, index.ts, and obtain the oracle address using the command: npx tsc && node build/index.ts
 3. Add the Firebase admin SDK using the command: pip install firebase-admin
 
 UPLOADING A SONG
